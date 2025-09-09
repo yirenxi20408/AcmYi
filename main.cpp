@@ -1,67 +1,64 @@
 #include <bits/stdc++.h>
 using namespace std;
-using ll = long long;
+#define inf 0x3f3f3f3f
+#define int long long
+#define endl '\n'
+#define fastio    ios::sync_with_stdio(false); cin.tie(nullptr)
+#define rep(i, l, r) for (int i = (l); i <= (r); ++i)
+#define per(i, l, r) for (int i = (l); i >= (r); --i)
 
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
-    int t;
-    cin >> t;
-    while (t--) {
-        int n;
-        cin >> n;
-        vector<ll> a(n+1);
-        for (int i = 1; i <= n; i++) cin >> a[i];
-        ll S = 0;
-        for (int i = 1; i <= n; i++) {
-            if (i % 2 == 1) S += a[i];
-            else S -= a[i];
-        }
-        ll G = 0;
-        
-        // same parity swaps
-        // odd-odd
-        if (n >= 3) {
-            int first_odd = 1;
-            int last_odd = (n % 2 == 1 ? n : n-1);
-            if (last_odd > first_odd) G = max(G, (ll)(last_odd - first_odd));
-            // even-even
-            int first_even = 2;
-            int last_even = (n % 2 == 0 ? n : n-1);
-            if (last_even > first_even) G = max(G, (ll)(last_even - first_even));
-        }
-        // cross parity swaps
-        // odd-even: l odd, r even
-        ll minX = LLONG_MAX, maxB = LLONG_MIN;
-        for (int i = 1; i <= n; i++) {
-            if (i % 2 == 1) {
-                ll X = 2*a[i] + i;
-                minX = min(minX, X);
-            } else {
-                ll B = 2*a[i] + i;
-                maxB = max(maxB, B);
-            }
-        }
-        if (minX != LLONG_MAX && maxB != LLONG_MIN) {
-            G = max(G, maxB - minX);
-        }
-        // even-odd: l even, r odd
-        ll maxC = LLONG_MIN, minD = LLONG_MAX;
-        for (int i = 1; i <= n; i++) {
-            if (i % 2 == 0) {
-                ll C = 2*a[i] - i;
-                maxC = max(maxC, C);
-            } else {
-                ll D = 2*a[i] - i;
-                minD = min(minD, D);
-            }
-        }
-        if (maxC != LLONG_MIN && minD != LLONG_MAX) {
-            G = max(G, maxC - minD);
-        }
-        
-        cout << S + G << '\n';
+void solve() {
+    int n;
+    cin >> n;
+    vector<int> a(n + 1);
+    rep(i, 1, n) {
+        cin >> a[i];
     }
+
+    int base = 0;
+    rep(i, 1, n) {
+        base += (i % 2 ? a[i] : -a[i]);
+    }
+
+    int best = 0;
+
+    if (n >= 3) {
+        int jil = 1, jir = (n % 2 ? n : n - 1);
+        if (jir > jil) best = max(best, jir - jil);
+
+        int oul = 2, our = (n % 2 == 0 ? n : n - 1);
+        if (our > oul) best = max(best, our - oul);
+    }
+    int mn = inf, mx = -inf;
+    rep(i, 1, n) {
+        if (i % 2) {
+            mn = min(mn, 2 * a[i] + i);
+        } else {
+            mx = max(mx, 2 * a[i] + i);
+        }
+    }
+    if (mn < inf && mx > -inf) {
+        best = max(best, mx - mn);
+    }
+    mn = inf, mx = -inf;
+    rep(i, 1, n) {
+        if (i % 2 == 0) {
+            mx = max(mx, 2 * a[i] - i);
+        } else {
+            mn = min(mn, 2 * a[i] - i);
+        }
+    }
+    if (mn < inf && mx > -inf) {
+        best = max(best, mx - mn);
+    }
+    int ans = base + best;
+    cout << ans << endl;
+}
+
+signed main() {
+    fastio;
+    int T;
+    cin >> T;
+    while (T--) solve();
     return 0;
 }
