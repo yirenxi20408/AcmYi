@@ -1,0 +1,13 @@
+# Compiled binaries
+*.out
+*.exe
+main
+a.out
+
+# Object files
+*.o
+*.obj
+
+# Temporary files
+*.tmp
+/tmp/
