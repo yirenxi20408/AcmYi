@@ -32,13 +32,12 @@ void solve() {
             if (s[cmd_idx] == 'A') {
                 pos++;
             } else {  // s[cmd_idx] == 'B'
-                // Find next white cell after pos efficiently
+                // Find next white cell after pos
+                // This is efficient because set.count() is O(log n) and 
+                // we only increment pos until we find a white cell
                 pos++;
-                auto it = black_cells.lower_bound(pos);
-                
-                while (it != black_cells.end() && *it == pos) {
+                while (black_cells.count(pos)) {
                     pos++;
-                    ++it;
                 }
             }
         }
